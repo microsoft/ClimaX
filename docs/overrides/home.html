@@ -1,0 +1,176 @@
+{% extends "main.html" %}
+
+<!-- Render hero under tabs -->
+{% block tabs %}
+{{ super() }}
+
+<style>
+    .md-footer-copyright {
+        display: none
+    }
+    .md-footer-nav__inner {
+        display: none
+    }
+
+    .md-content {
+        display: none
+    }
+
+    .tx-container {
+
+        height: fit-content;
+        padding-top: 0rem;
+        background: linear-gradient(var(--md-primary-fg-color), var(--md-primary-fg-color--dark) 60%, #fff 99%);
+    }
+
+    .tx-hero {
+        color: var(--md-primary-bg-color);
+        justify-content: center;
+        margin: 32px 2.5rem;
+    }
+
+    .tx-hero h1 {
+        margin-bottom: 0rem;
+        color: currentColor;
+        font-weight: 700
+    }
+    .tx-hero__content {
+        padding-bottom: 6rem;
+        margin: 0 auto;
+        /* justify-content: left;
+        padding-right: 3rem; */
+    }
+
+    .tx-hero__content h1 {
+        font-size: 2.5rem;
+    }
+
+    .tx-hero__content_small {
+        justify-content: left;
+        padding-right: 3rem;
+    }
+
+    .tx-hero__image {
+        max-width: 100%;
+        max-height: 100%;
+        order: 1;
+        padding-right: 1.5rem;
+        padding-bottom: 2.5rem;
+    }
+
+    .tx-hero .md-button {
+        margin-top: .5rem;
+        margin-right: .5rem;
+        color: var(--md-primary-bg-color)
+    }
+
+    .tx-hero__content-2 {
+        margin-left: 50px;
+        justify-content: left;
+        /* color: #009485; */
+        font-weight: 300;
+        padding: 0 0px;
+        padding-bottom: 40px;
+        word-break: break-word;
+        float: right;
+    }   
+    .tx-hero__content-2 h1 {
+        margin-top: 50px;
+        color: black;
+        /* color: #009485; */
+        font-weight: 600;
+        /* font-size: 36px; */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: normal;
+        /*font-family: inherit;*/
+    }    
+    .tx-hero__content-2 p {
+        font-size: 17px;
+        line-height: 1.8em;
+        text-rendering: optimizeLegibility;
+        color: black;
+        display: block;
+    }     
+    @media screen and (min-width: 60em) {
+        .md-sidebar--secondary {
+            display: none
+        }
+
+        .tx-hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tx-hero__content {
+            max-width: 28rem;
+            margin-top: 3.5rem;
+            margin-bottom: 3.5rem;
+            margin-left: 1.0rem;
+            margin-right: 4.0rem;
+            align-items: center;
+        }
+    }
+
+    @media screen and (min-width: 76.25em) {
+        .md-sidebar--primary {
+            display: none
+        }
+
+        .top-hr {
+            width: 100%;
+            display: flex;
+            max-width: 61rem;
+            margin-right: auto;
+            margin-left: auto;
+            padding: 0 .2rem;
+        }
+
+        .bottom-hr {
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            max-width: 61rem;
+            margin-right: auto;
+            margin-left: auto;
+            padding: 0 .2rem;
+        }
+    }
+ 
+</style>
+
+<section class="tx-container">
+    <div class="md-grid md-typeset">
+        <div class="tx-hero">
+            <div class="tx-hero__image">
+
+            </div>
+
+            <div class="tx-hero__content">
+                <h1 id="climax">CliMax</h1>
+                <p>A generalist weather and climate model.</p>
+                <br>
+                <a href="" class="md-button md-button--primary">Paper</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="tx-container-2">
+    <div class="tx-hero">
+        <!-- Hero content -->
+        <div class="tx-hero__content-2">
+            <h1 id="what-is-climax">What is CliMax?</h1><br>
+            <p>
+                CliMax is a flexible and generalizable deep learning model for climate science that can be trained using heterogeneous datasets that span different climate variables, spatiotemporal coverage, and physical grounding.
+                CliMax extends the Transformer architecture with novel encoding and aggregation blocks that permit efficient data fusion. We pretrain CliMax using a randomized forecasting objective, and post pretraining, we can finetune the model for any downstream spatiotemporal forecasting task relating to weather and climate.                
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+<!-- Footer Section -->
+{% block footer %}{% endblock %}

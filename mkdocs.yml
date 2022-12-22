@@ -1,0 +1,14 @@
+site_name: CliMax
+repo_name: microsoft/CliMax
+repo_url: https://github.com/microsoft/CliMax
+theme:
+  name: material
+  custom_dir: docs/overrides
+  font:
+    text: Lato
+  palette:
+    primary: blue
+    accent: blue
+  
+nav:
+  - Home: "index.md"
