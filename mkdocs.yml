@@ -8,9 +8,15 @@ theme:
     text: Lato
   palette:
     scheme: climax
+  logo: assets/images/climax-icon.png
+  icon:
+    repo: fontawesome/brands/github
+    
+    
+  favicon: assets/images/climax-icon.png
   
 extra_css:
   - stylesheets/extra.css
-    
+
 nav:
   - Home: "index.md"

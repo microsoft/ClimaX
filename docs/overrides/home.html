@@ -20,7 +20,7 @@
 
         height: fit-content;
         padding-top: 0rem;
-        background: linear-gradient(var(--md-primary-fg-color), var(--md-primary-fg-color--dark) 60%, #fff 99%);
+        background: linear-gradient(var(--md-primary-fg-color), var(--md-primary-fg-color--dark) 80%, #fff 90%);
     }
 
     .tx-hero {
@@ -63,6 +63,22 @@
         margin-right: .5rem;
         color: var(--md-primary-bg-color)
     }
+    .tx-container-2 {
+        padding: 0rem;
+        background-color: white;
+        margin-bottom: 0px;
+    }
+
+    .tx-hero__image-2 {
+        max-width: 100%;
+        max-height: 100%;
+        order: 1;
+        padding-right: 0.1rem;
+        padding-left: 0.25rem;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        float: left;
+    }    
 
     .tx-hero__content-2 {
         margin-left: 50px;
@@ -75,7 +91,7 @@
         float: right;
     }   
     .tx-hero__content-2 h1 {
-        margin-top: 50px;
+        margin-top: 10px;
         color: black;
         /* color: #009485; */
         font-weight: 600;
@@ -157,7 +173,7 @@
                 <h1 id="climax">ClimaX</h1>
                 <p>A foundation model for weather and climate.</p>
                 <br>
-                <a href="" class="md-button md-button--primary">Paper</a>
+                <a href="" class="md-button md-button--primary">Paper</a><br>
                 <a href="https://github.com/microsoft/ClimaX" class="md-button">Code (coming soon) 
                 <img
                     class = icon
@@ -171,21 +187,43 @@
         </div>
     </div>
 </section>
-<!--
+
 
 
 <section class="tx-container-2">
-    <div class="tx-hero">
+    <div class ="md-grid md-typeset">
+        <div class="tx-hero__image-2">
+            <img
+                    src="assets/images/climax-coverfigure.png"
+                    alt=""
+                    width="600"
+                    draggable="false"
+            >
+        </div>
+        <div class="tx-hero">
     
-        <div class="tx-hero__content-2">
-            <h1 id="what-is-climax">What is CliMax?</h1><br>
-            <p>
-                             
-            </p>
+            <div class="tx-hero__content-2">
+                <h1 id="what-is-climax">What is CliMax?</h1><br>
+                <p>
+                    ▶️
+                    <strong>
+                        ClimaX is the first foundation model for weather and climate science. 
+                    </strong><br>
+                    ▶️
+                    <strong>
+                        Simple, flexible, and easy to use, with ample examples for how to apply to various downstream tasks.
+                    </strong><br>
+                    ▶️
+                    <strong>
+                        Supports efficient scalable distributed training, powered by <a href="https://www.pytorchlightning.ai/">PyTorch Lightning</a>
+                    </strong><br>
+                </p>
+            </div>
         </div>
     </div>
+
 </section>
--->
+
 
 {% endblock %}
 <!-- Footer Section -->
