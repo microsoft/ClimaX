@@ -1,5 +1,5 @@
 ---
-title: CliMax
+title: ClimaX
 template: home.html
 ---
 

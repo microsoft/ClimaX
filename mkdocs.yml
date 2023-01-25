@@ -1,14 +1,16 @@
-site_name: CliMax
-repo_name: microsoft/CliMax
-repo_url: https://github.com/microsoft/CliMax
+site_name: ClimaX
+repo_name: microsoft/ClimaX
+repo_url: https://github.com/microsoft/ClimaX
 theme:
   name: material
   custom_dir: docs/overrides
   font:
     text: Lato
   palette:
-    primary: blue
-    accent: blue
+    scheme: climax
   
+extra_css:
+  - stylesheets/extra.css
+    
 nav:
   - Home: "index.md"
