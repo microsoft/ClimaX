@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ClimaX"
+version = "0.1.0"
+authors =[
+    {name="Tung Nguyen", email="tungnd@g.ucla.edu"},
+    {name="Jayesh K. Gupta", email="mail@rejuvyesh.com"}
+]
+description = ""
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+
+]
+
+[project.urls]
+"Homepage" = "https://microsoft.github.io/ClimaX/"
+"Bug Tracker" = "https://github.com/microsoft/ClimaX/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]

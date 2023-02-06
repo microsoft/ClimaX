@@ -1,8 +1,37 @@
 site_name: ClimaX
 repo_name: microsoft/ClimaX
 repo_url: https://github.com/microsoft/ClimaX
+
+markdown_extensions:
+  - attr_list
+  - tables
+  - admonition
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.arithmatex:
+      generic: true
+  - toc:
+      permalink: "¤"
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
 theme:
   name: material
+  features:
+    - content.code.annotate
   custom_dir: docs/overrides
   font:
     text: Lato
@@ -11,12 +40,31 @@ theme:
   logo: assets/images/climax-icon.png
   icon:
     repo: fontawesome/brands/github
-    
-    
+
+
   favicon: assets/images/climax-icon.png
-  
+
 extra_css:
   - stylesheets/extra.css
 
 nav:
   - Home: "index.md"
+  - Installation: "install.md"
+  - Usage: "usage.md"
+  - Code Reference:
+    - Pretraining: "reference/pretrain.md"
+    - Global Forecasting: "reference/global_forecast.md"
+
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      enable_inventory: true
+      handlers:
+        python:
+          import:
+            - https://docs.python.org/3/objects.inv
+            - https://pytorch.org/docs/stable/objects.inv
+            - https://pytorch.org/data/beta/objects.inv
+            - https://pytorch-lightning.readthedocs.io/en/stable/objects.inv
