@@ -3,8 +3,8 @@
 
 import os
 
-from global_forecast.datamodule import GlobalForecastDataModule
-from global_forecast.module import GlobalForecastModule
+from climax.global_forecast.datamodule import GlobalForecastDataModule
+from climax.global_forecast.module import GlobalForecastModule
 from pytorch_lightning.cli import LightningCLI
 
 
