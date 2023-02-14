@@ -86,7 +86,7 @@ python src/climax/global_forecast/train.py --config configs/global_forecast_clim
 ```
 To train ClimaX from scratch, set `--model.pretrained_path=""`.
 
-## Global Forecasting
+## Regional Forecasting
 
 ### Data Preparation
 
