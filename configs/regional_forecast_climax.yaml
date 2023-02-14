@@ -1,0 +1,199 @@
+seed_everything: 42
+
+# ---------------------------- TRAINER -------------------------------------------
+trainer:
+  default_root_dir: ${oc.env:OUTPUT_DIR,/home/t-tungnguyen/ClimaX/exps/regional_forecast_climax}
+
+  precision: 16
+
+  gpus: null
+  num_nodes: 1
+  accelerator: gpu
+  strategy: ddp
+
+  min_epochs: 1
+  max_epochs: 100
+  enable_progress_bar: true
+
+  sync_batchnorm: True
+  enable_checkpointing: True
+  resume_from_checkpoint: null
+
+  # debugging
+  fast_dev_run: false
+
+  logger:
+    class_path: pytorch_lightning.loggers.tensorboard.TensorBoardLogger
+    init_args:
+      save_dir: ${trainer.default_root_dir}/logs
+      name: null
+      version: null
+      log_graph: False
+      default_hp_metric: True
+      prefix: ""
+
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.LearningRateMonitor
+      init_args:
+        logging_interval: "step"
+
+    - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+      init_args:
+        dirpath: "${trainer.default_root_dir}/checkpoints"
+        monitor: "val/w_rmse" # name of the logged metric which determines when model is improving
+        mode: "min" # "max" means higher metric value is better, can be also "min"
+        save_top_k: 1 # save k best models (determined by above metric)
+        save_last: True # additionaly always save model from last epoch
+        verbose: False
+        filename: "epoch_{epoch:03d}"
+        auto_insert_metric_name: False
+
+    - class_path: pytorch_lightning.callbacks.EarlyStopping
+      init_args:
+        monitor: "val/w_rmse" # name of the logged metric which determines when model is improving
+        mode: "min" # "max" means higher metric value is better, can be also "min"
+        patience: 5 # how many validation epochs of not improving until training stops
+        min_delta: 0. # minimum change in the monitored metric needed to qualify as an improvement
+
+    - class_path: pytorch_lightning.callbacks.RichModelSummary
+      init_args:
+        max_depth: -1
+
+    - class_path: pytorch_lightning.callbacks.RichProgressBar
+
+# ---------------------------- MODEL -------------------------------------------
+model:
+  lr: 5e-4
+  beta_1: 0.9
+  beta_2: 0.99
+  weight_decay: 1e-5
+  warmup_epochs: 10000
+  max_epochs: 100000
+  warmup_start_lr: 1e-8
+  eta_min: 1e-8
+  pretrained_path: ""
+
+  net:
+    class_path: climax.regional_forecast.arch.RegionalClimaX
+    init_args:
+      default_vars: [
+          "land_sea_mask",
+          "orography",
+          "lattitude",
+          "2m_temperature",
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind",
+          "geopotential_50",
+          "geopotential_250",
+          "geopotential_500",
+          "geopotential_600",
+          "geopotential_700",
+          "geopotential_850",
+          "geopotential_925",
+          "u_component_of_wind_50",
+          "u_component_of_wind_250",
+          "u_component_of_wind_500",
+          "u_component_of_wind_600",
+          "u_component_of_wind_700",
+          "u_component_of_wind_850",
+          "u_component_of_wind_925",
+          "v_component_of_wind_50",
+          "v_component_of_wind_250",
+          "v_component_of_wind_500",
+          "v_component_of_wind_600",
+          "v_component_of_wind_700",
+          "v_component_of_wind_850",
+          "v_component_of_wind_925",
+          "temperature_50",
+          "temperature_250",
+          "temperature_500",
+          "temperature_600",
+          "temperature_700",
+          "temperature_850",
+          "temperature_925",
+          "relative_humidity_50",
+          "relative_humidity_250",
+          "relative_humidity_500",
+          "relative_humidity_600",
+          "relative_humidity_700",
+          "relative_humidity_850",
+          "relative_humidity_925",
+          "specific_humidity_50",
+          "specific_humidity_250",
+          "specific_humidity_500",
+          "specific_humidity_600",
+          "specific_humidity_700",
+          "specific_humidity_850",
+          "specific_humidity_925",
+        ]
+      img_size: [32, 64]
+      patch_size: 2
+      embed_dim: 1024
+      depth: 8
+      decoder_depth: 2
+      num_heads: 16
+      mlp_ratio: 4
+      drop_path: 0.1
+      drop_rate: 0.1
+
+# ---------------------------- DATA -------------------------------------------
+data:
+  root_dir: /datadrive/datasets/5.625deg_equally_np/
+  variables: [
+      "land_sea_mask",
+      "orography",
+      "lattitude",
+      "2m_temperature",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind",
+      "geopotential_50",
+      "geopotential_250",
+      "geopotential_500",
+      "geopotential_600",
+      "geopotential_700",
+      "geopotential_850",
+      "geopotential_925",
+      "u_component_of_wind_50",
+      "u_component_of_wind_250",
+      "u_component_of_wind_500",
+      "u_component_of_wind_600",
+      "u_component_of_wind_700",
+      "u_component_of_wind_850",
+      "u_component_of_wind_925",
+      "v_component_of_wind_50",
+      "v_component_of_wind_250",
+      "v_component_of_wind_500",
+      "v_component_of_wind_600",
+      "v_component_of_wind_700",
+      "v_component_of_wind_850",
+      "v_component_of_wind_925",
+      "temperature_50",
+      "temperature_250",
+      "temperature_500",
+      "temperature_600",
+      "temperature_700",
+      "temperature_850",
+      "temperature_925",
+      "relative_humidity_50",
+      "relative_humidity_250",
+      "relative_humidity_500",
+      "relative_humidity_600",
+      "relative_humidity_700",
+      "relative_humidity_850",
+      "relative_humidity_925",
+      "specific_humidity_50",
+      "specific_humidity_250",
+      "specific_humidity_500",
+      "specific_humidity_600",
+      "specific_humidity_700",
+      "specific_humidity_850",
+      "specific_humidity_925",
+    ]
+  out_variables: ["geopotential_500", "temperature_850", "2m_temperature", "10m_u_component_of_wind", "10m_v_component_of_wind"]
+  region: "NorthAmerica"
+  predict_range: 72
+  hrs_each_step: 1
+  buffer_size: 10000
+  batch_size: 128
+  num_workers: 1
+  pin_memory: False

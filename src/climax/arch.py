@@ -153,15 +153,15 @@ class ClimaX(nn.Module):
         ids = self.get_var_ids(vars, var_emb.device)
         return var_emb[:, ids, :]
 
-    def unpatchify(self, x: torch.Tensor):
+    def unpatchify(self, x: torch.Tensor, h=None, w=None):
         """
         x: (B, L, V * patch_size**2)
         return imgs: (B, V, H, W)
         """
         p = self.patch_size
         c = len(self.default_vars)
-        h = self.img_size[0] // p
-        w = self.img_size[1] // p
+        h = self.img_size[0] // p if h is None else h // p
+        w = self.img_size[1] // p if w is None else w // p
         assert h * w == x.shape[1]
 
         x = x.reshape(shape=(x.shape[0], h, w, p, p, c))
