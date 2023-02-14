@@ -38,7 +38,7 @@ def nc2np(path, variables, years, save_dir, partition, num_shards_per_year):
 
         # constant variables
         for f in constant_fields:
-            np_vars[NAME_TO_VAR[f]] = constant_values[f]
+            np_vars[f] = constant_values[f]
 
         # non-constant fields
         for var in variables:
@@ -49,11 +49,11 @@ def nc2np(path, variables, years, save_dir, partition, num_shards_per_year):
             if len(ds[code].shape) == 3:  # surface level variables
                 ds[code] = ds[code].expand_dims("val", axis=1)
                 # remove the last 24 hours if this year has 366 days
-                np_vars[code] = ds[code].to_numpy()[:HOURS_PER_YEAR]
+                np_vars[var] = ds[code].to_numpy()[:HOURS_PER_YEAR]
 
                 if partition == "train":  # compute mean and std of each var in each year
-                    var_mean_yearly = np_vars[code].mean(axis=(0, 2, 3))
-                    var_std_yearly = np_vars[code].std(axis=(0, 2, 3))
+                    var_mean_yearly = np_vars[var].mean(axis=(0, 2, 3))
+                    var_std_yearly = np_vars[var].std(axis=(0, 2, 3))
                     if var not in normalize_mean:
                         normalize_mean[var] = [var_mean_yearly]
                         normalize_std[var] = [var_std_yearly]
@@ -61,7 +61,7 @@ def nc2np(path, variables, years, save_dir, partition, num_shards_per_year):
                         normalize_mean[var].append(var_mean_yearly)
                         normalize_std[var].append(var_std_yearly)
 
-                clim_yearly = np_vars[code].mean(axis=0)
+                clim_yearly = np_vars[var].mean(axis=0)
                 if var not in climatology:
                     climatology[var] = [clim_yearly]
                 else:
@@ -75,11 +75,11 @@ def nc2np(path, variables, years, save_dir, partition, num_shards_per_year):
                     ds_level = ds.sel(level=[level])
                     level = int(level)
                     # remove the last 24 hours if this year has 366 days
-                    np_vars[f"{code}_{level}"] = ds_level[code].to_numpy()[:HOURS_PER_YEAR]
+                    np_vars[f"{var}_{level}"] = ds_level[code].to_numpy()[:HOURS_PER_YEAR]
 
                     if partition == "train":  # compute mean and std of each var in each year
-                        var_mean_yearly = np_vars[f"{code}_{level}"].mean(axis=(0, 2, 3))
-                        var_std_yearly = np_vars[f"{code}_{level}"].std(axis=(0, 2, 3))
+                        var_mean_yearly = np_vars[f"{var}_{level}"].mean(axis=(0, 2, 3))
+                        var_std_yearly = np_vars[f"{var}_{level}"].std(axis=(0, 2, 3))
                         if var not in normalize_mean:
                             normalize_mean[f"{var}_{level}"] = [var_mean_yearly]
                             normalize_std[f"{var}_{level}"] = [var_std_yearly]
@@ -87,7 +87,7 @@ def nc2np(path, variables, years, save_dir, partition, num_shards_per_year):
                             normalize_mean[f"{var}_{level}"].append(var_mean_yearly)
                             normalize_std[f"{var}_{level}"].append(var_std_yearly)
 
-                    clim_yearly = np_vars[f"{code}_{level}"].mean(axis=0)
+                    clim_yearly = np_vars[f"{var}_{level}"].mean(axis=0)
                     if f"{var}_{level}" not in climatology:
                         climatology[f"{var}_{level}"] = [clim_yearly]
                     else:

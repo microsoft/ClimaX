@@ -18,7 +18,6 @@ from climax.pretrain.dataset import (
     NpyReader,
     ShuffleIterableDataset,
 )
-from climax.utils.data_utils import VAR_LEVEL_TO_NAME_LEVEL
 
 
 class GlobalForecastDataModule(LightningDataModule):
@@ -77,13 +76,13 @@ class GlobalForecastDataModule(LightningDataModule):
         normalize_mean = dict(np.load(os.path.join(self.hparams.root_dir, "normalize_mean.npz")))
         mean = []
         for var in variables:
-            if var != "tp":
-                mean.append(normalize_mean[VAR_LEVEL_TO_NAME_LEVEL[var]])
+            if var != "total_precipitation":
+                mean.append(normalize_mean[var])
             else:
                 mean.append(np.array([0.0]))
         normalize_mean = np.concatenate(mean)
         normalize_std = dict(np.load(os.path.join(self.hparams.root_dir, "normalize_std.npz")))
-        normalize_std = np.concatenate([normalize_std[VAR_LEVEL_TO_NAME_LEVEL[var]] for var in variables])
+        normalize_std = np.concatenate([normalize_std[var] for var in variables])
         return transforms.Normalize(normalize_mean, normalize_std)
 
     def get_lat_lon(self):
@@ -96,7 +95,7 @@ class GlobalForecastDataModule(LightningDataModule):
         clim_dict = np.load(path)
         if variables is None:
             variables = self.hparams.variables
-        clim = np.concatenate([clim_dict[VAR_LEVEL_TO_NAME_LEVEL[var]] for var in variables])
+        clim = np.concatenate([clim_dict[var] for var in variables])
         clim = torch.from_numpy(clim)
         return clim
 

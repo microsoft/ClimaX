@@ -17,7 +17,6 @@ from climax.pretrain.dataset import (
     NpyReader,
     ShuffleIterableDataset,
 )
-from climax.utils.data_utils import VAR_LEVEL_TO_NAME_LEVEL
 
 
 def collate_fn(batch):
@@ -30,8 +29,8 @@ def collate_fn(batch):
         inp,
         out,
         lead_times,
-        [VAR_LEVEL_TO_NAME_LEVEL[v] for v in variables],
-        [VAR_LEVEL_TO_NAME_LEVEL[v] for v in out_variables],
+        [v for v in variables],
+        [v for v in out_variables],
     )
 
 
@@ -108,13 +107,13 @@ class MultiSourceDataModule(LightningDataModule):
             normalize_mean = dict(np.load(os.path.join(root_dir, "normalize_mean.npz")))
             mean = []
             for var in variables:
-                if var != "tp":
-                    mean.append(normalize_mean[VAR_LEVEL_TO_NAME_LEVEL[var]])
+                if var != "total_precipitation":
+                    mean.append(normalize_mean[var])
                 else:
                     mean.append(np.array([0.0]))
             normalize_mean = np.concatenate(mean)
             normalize_std = dict(np.load(os.path.join(root_dir, "normalize_std.npz")))
-            normalize_std = np.concatenate([normalize_std[VAR_LEVEL_TO_NAME_LEVEL[var]] for var in variables])
+            normalize_std = np.concatenate([normalize_std[var] for var in variables])
             dict_transforms[k] = transforms.Normalize(normalize_mean, normalize_std)
         return dict_transforms
 
