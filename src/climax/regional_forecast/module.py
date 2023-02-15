@@ -55,7 +55,10 @@ class RegionalForecastModule(LightningModule):
             self.load_pretrained_weights(pretrained_path)
 
     def load_pretrained_weights(self, pretrained_path):
-        checkpoint = torch.load(pretrained_path, map_location=torch.device("cpu"))
+        if pretrained_path.startswith('http'):
+            checkpoint = torch.hub.load_state_dict_from_url(pretrained_path)
+        else:
+            checkpoint = torch.load(pretrained_path, map_location=torch.device("cpu"))
 
         print("Loading pre-trained checkpoint from: %s" % pretrained_path)
         checkpoint_model = checkpoint["state_dict"]
