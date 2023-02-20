@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ClimaX"
-version = "0.2.2"
+version = "0.2.3"
 authors =[
     {name="Tung Nguyen", email="tungnd@g.ucla.edu"},
     {name="Jayesh K. Gupta", email="mail@rejuvyesh.com"}
