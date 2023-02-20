@@ -68,7 +68,10 @@ class MultiSourceDataModule(LightningDataModule):
         pin_memory: bool = False,
     ):
         super().__init__()
-
+        if num_workers > 1:
+            raise NotImplementedError(
+                "num_workers > 1 is not supported yet. Performance will likely degrage too with larger num_workers."
+            )
         # this line allows to access init params with 'self.hparams' attribute
         self.save_hyperparameters(logger=False)
 
