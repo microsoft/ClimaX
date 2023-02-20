@@ -26,7 +26,8 @@ python src/climax/pretrain/train.py --config configs/pretrain_climax.yaml \
 
 ### Pretrained checkpoints
 We provide two pretrained checkpoints, one was pretrained on [5.625deg](https://climaxrelease.blob.core.windows.net/checkpoints/ClimaX-5.625deg.ckpt) data, and the other was pretrained on [1.40625deg](https://climaxrelease.blob.core.windows.net/checkpoints/ClimaX-1.40625deg.ckpt) data. Both checkpoints were pretrained using all 5 CMIP6 datasets.
-```Usage:``` We can load the checkpoint by passing the checkpoint url to the training script. See below.
+
+**Usage:** We can load the checkpoint by passing the checkpoint url to the training script. See below for examples.
 
 ## Global Forecasting
 
