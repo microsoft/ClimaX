@@ -10,7 +10,7 @@ git clone https://github.com/microsoft/ClimaX
     ```bash title="create and activate env"
     cd ClimaX
     conda env create --file docker/environment.yml
-    conda activate ClimaX
+    conda activate climaX
     ```
 
     ```bash title="install this package"
