@@ -55,7 +55,7 @@ class GlobalForecastModule(LightningModule):
             self.load_pretrained_weights(pretrained_path)
 
     def load_pretrained_weights(self, pretrained_path):
-        if pretrained_path.startswith('http'):
+        if pretrained_path.startswith("http"):
             checkpoint = torch.hub.load_state_dict_from_url(pretrained_path)
         else:
             checkpoint = torch.load(pretrained_path, map_location=torch.device("cpu"))
@@ -65,6 +65,12 @@ class GlobalForecastModule(LightningModule):
         interpolate_pos_embed(self.net, checkpoint_model, new_size=self.net.img_size)
 
         state_dict = self.state_dict()
+        if self.net.parallel_patch_embed:
+            if "token_embeds.proj_weights" not in checkpoint_model.keys():
+                raise ValueError(
+                    "Pretrained checkpoint does not have token_embeds.proj_weights for parallel processing. Please convert the checkpoints first or disable parallel patch_embed tokenization."
+                )
+
         # checkpoint_keys = list(checkpoint_model.keys())
         for k in list(checkpoint_model.keys()):
             if "channel" in k:
