@@ -31,6 +31,7 @@ class ClimaX(nn.Module):
         mlp_ratio (float): ratio of mlp hidden dimension to embedding dimension
         drop_path (float): stochastic depth rate
         drop_rate (float): dropout rate
+        parallel_patch_embed (bool): whether to use parallel patch embedding
     """
 
     def __init__(
