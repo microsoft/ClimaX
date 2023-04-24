@@ -13,6 +13,8 @@ from climax.utils.pos_embed import (
     get_2d_sincos_pos_embed,
 )
 
+from .parallelpatchembed import ParallelVarPatchEmbed
+
 
 class ClimaX(nn.Module):
     """Implements the ClimaX model as described in the paper,
@@ -43,6 +45,7 @@ class ClimaX(nn.Module):
         mlp_ratio=4.0,
         drop_path=0.1,
         drop_rate=0.1,
+        parallel_patch_embed=False,
     ):
         super().__init__()
 
@@ -50,12 +53,16 @@ class ClimaX(nn.Module):
         self.img_size = img_size
         self.patch_size = patch_size
         self.default_vars = default_vars
-
+        self.parallel_patch_embed = parallel_patch_embed
         # variable tokenization: separate embedding layer for each input variable
-        self.token_embeds = nn.ModuleList(
-            [PatchEmbed(img_size, patch_size, 1, embed_dim) for i in range(len(default_vars))]
-        )
-        self.num_patches = self.token_embeds[0].num_patches
+        if self.parallel_patch_embed:
+            self.token_embeds = ParallelVarPatchEmbed(len(default_vars), img_size, patch_size, embed_dim)
+            self.num_patches = self.token_embeds.num_patches
+        else:
+            self.token_embeds = nn.ModuleList(
+                [PatchEmbed(img_size, patch_size, 1, embed_dim) for i in range(len(default_vars))]
+            )
+            self.num_patches = self.token_embeds[0].num_patches
 
         # variable embedding to denote which variable each token belongs to
         # helps in aggregating variables
@@ -118,9 +125,14 @@ class ClimaX(nn.Module):
         self.var_embed.data.copy_(torch.from_numpy(var_embed).float().unsqueeze(0))
 
         # token embedding layer
-        for i in range(len(self.token_embeds)):
-            w = self.token_embeds[i].proj.weight.data
-            trunc_normal_(w.view([w.shape[0], -1]), std=0.02)
+        if self.parallel_patch_embed:
+            for i in range(len(self.token_embeds.proj_weights)):
+                w = self.token_embeds.proj_weights[i].data
+                trunc_normal_(w.view([w.shape[0], -1]), std=0.02)
+        else:
+            for i in range(len(self.token_embeds)):
+                w = self.token_embeds[i].proj.weight.data
+                trunc_normal_(w.view([w.shape[0], -1]), std=0.02)
 
         # initialize nn.Linear and nn.LayerNorm
         self.apply(self._init_weights)
@@ -193,10 +205,14 @@ class ClimaX(nn.Module):
         # tokenize each variable separately
         embeds = []
         var_ids = self.get_var_ids(variables, x.device)
-        for i in range(len(var_ids)):
-            id = var_ids[i]
-            embeds.append(self.token_embeds[id](x[:, i : i + 1]))
-        x = torch.stack(embeds, dim=1)  # B, V, L, D
+
+        if self.parallel_patch_embed:
+            x = self.token_embeds(x, var_ids)  # B, V, L, D
+        else:
+            for i in range(len(var_ids)):
+                id = var_ids[i]
+                embeds.append(self.token_embeds[id](x[:, i : i + 1]))
+            x = torch.stack(embeds, dim=1)  # B, V, L, D
 
         # add variable embedding
         var_embed = self.get_var_emb(self.var_embed, variables)
