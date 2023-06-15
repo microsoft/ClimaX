@@ -25,7 +25,7 @@ python src/climax/pretrain/train.py --config configs/pretrain_climax.yaml \
     Make sure to update the paths of the data directories in the config files (or override them via the CLI).
 
 ### Pretrained checkpoints
-We provide two pretrained checkpoints, one was pretrained on [5.625deg](https://climaxrelease.blob.core.windows.net/checkpoints/ClimaX-5.625deg.ckpt) data, and the other was pretrained on [1.40625deg](https://climaxrelease.blob.core.windows.net/checkpoints/ClimaX-1.40625deg.ckpt) data. Both checkpoints were pretrained using all 5 CMIP6 datasets.
+We provide two pretrained checkpoints, one was pretrained on [5.625deg](https://huggingface.co/tungnd/climax/resolve/main/5.625deg.ckpt) data, and the other was pretrained on [1.40625deg](https://huggingface.co/tungnd/climax/resolve/main/1.40625deg.ckpt) data. Both checkpoints were pretrained using all 5 CMIP6 datasets.
 
 **Usage:** We can load the checkpoint by passing the checkpoint url to the training script. See below for examples.
 
@@ -85,7 +85,7 @@ python src/climax/global_forecast/train.py --config configs/global_forecast_clim
     --data.root_dir=/mnt/data/5.625deg_npz \
     --data.predict_range=72 --data.out_variables=['z_500','t_850','t2m'] \
     --data.batch_size=16 \
-    --model.pretrained_path='https://climaxrelease.blob.core.windows.net/checkpoints/ClimaX-5.625deg.ckpt' \
+    --model.pretrained_path='https://huggingface.co/tungnd/climax/resolve/main/5.625deg.ckpt' \
     --model.lr=5e-7 --model.beta_1="0.9" --model.beta_2="0.99" \
     --model.weight_decay=1e-5
 ```
@@ -112,7 +112,7 @@ python src/climax/regional_forecast/train.py --config configs/regional_forecast_
     --data.region="NorthAmerica"
     --data.predict_range=72 --data.out_variables=['z_500','t_850','t2m'] \
     --data.batch_size=16 \
-    --model.pretrained_path='https://climaxrelease.blob.core.windows.net/checkpoints/ClimaX-5.625deg.ckpt' \
+    --model.pretrained_path='https://huggingface.co/tungnd/climax/resolve/main/1.40625deg.ckpt' \
     --model.lr=5e-7 --model.beta_1="0.9" --model.beta_2="0.99" \
     --model.weight_decay=1e-5
 ```
