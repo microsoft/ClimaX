@@ -1,0 +1,121 @@
+seed_everything: 42
+
+# ---------------------------- TRAINER -------------------------------------------
+trainer:
+  default_root_dir: ${oc.env:AMLT_OUTPUT_DIR,/home/tungnd/ClimaX/exps/climate_projection_climax}
+
+  precision: 16
+
+  gpus: null
+  num_nodes: 1
+  accelerator: gpu
+  strategy: ddp
+
+  min_epochs: 1
+  max_epochs: 50
+  enable_progress_bar: true
+
+  sync_batchnorm: True
+  enable_checkpointing: True
+  resume_from_checkpoint: null
+
+  # debugging
+  fast_dev_run: false
+
+  logger:
+    class_path: pytorch_lightning.loggers.tensorboard.TensorBoardLogger
+    init_args:
+      save_dir: ${trainer.default_root_dir}/logs
+      name: null
+      version: null
+      log_graph: False
+      default_hp_metric: True
+      prefix: ""
+
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.LearningRateMonitor
+      init_args:
+        logging_interval: "step"
+
+    - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+      init_args:
+        dirpath: "${trainer.default_root_dir}/checkpoints/"
+        monitor: "val/w_mse" # name of the logged metric which determines when model is improving
+        mode: "min" # "max" means higher metric value is better, can be also "min"
+        save_top_k: 1 # save k best models (determined by above metric)
+        save_last: True # additionaly always save model from last epoch
+        verbose: False
+        filename: "epoch_{epoch:03d}"
+        auto_insert_metric_name: False
+
+    - class_path: pytorch_lightning.callbacks.EarlyStopping
+      init_args:
+        monitor: "val/w_mse" # name of the logged metric which determines when model is improving
+        mode: "min" # "max" means higher metric value is better, can be also "min"
+        patience: 5 # how many validation epochs of not improving until training stops
+        min_delta: 0. # minimum change in the monitored metric needed to qualify as an improvement
+
+    - class_path: pytorch_lightning.callbacks.RichModelSummary
+      init_args:
+        max_depth: -1
+
+    - class_path: pytorch_lightning.callbacks.RichProgressBar
+
+# ---------------------------- MODEL -------------------------------------------
+model:
+  lr: 5e-4
+  beta_1: 0.9
+  beta_2: 0.999
+  weight_decay: 1e-5
+  warmup_epochs: 60
+  max_epochs: 600
+  warmup_start_lr: 1e-8
+  eta_min: 1e-8
+  pretrained_path: "https://huggingface.co/tungnd/climax/resolve/main/5.625deg.ckpt"
+
+  net:
+    class_path: climax.climate_projection.arch.ClimaXClimateBench
+    init_args:
+      default_vars: [
+        'CO2',
+        'SO2',
+        'CH4',
+        'BC'
+      ]
+      out_vars: "tas" # diurnal_temperature_range, tas, pr, pr90
+      img_size: [32, 64]
+      time_history: 10
+      patch_size: 2
+      embed_dim: 1024
+      depth: 8
+      num_heads: 16
+      mlp_ratio: 4
+      drop_path: 0.1
+      drop_rate: 0.1
+      parallel_patch_embed: False
+      freeze_encoder: True
+
+# ---------------------------- DATA -------------------------------------------
+data:
+  root_dir: /home/data/datasets/climate-learn/climatebench/5.625deg/
+  history: 10
+  list_train_simu: [
+    'ssp126',
+    'ssp370',
+    'ssp585',
+    'historical',
+    'hist-GHG',
+    'hist-aer'
+  ]
+  list_test_simu: ['ssp245']
+  variables: [
+      'CO2',
+      'SO2',
+      'CH4',
+      'BC'
+  ]
+  out_variables: 'tas'
+  train_ratio: 0.9
+  batch_size: 1
+  num_workers: 1
+  pin_memory: False

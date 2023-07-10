@@ -118,6 +118,42 @@ python src/climax/regional_forecast/train.py --config configs/regional_forecast_
 ```
 To train ClimaX from scratch, set `--model.pretrained_path=""`.
 
+## Climate Projection
+
+### Data Preparation
+
+First, download [ClimateBench](https://doi.org/10.5281/zenodo.5196512) data. ClimaX can work with either the original ClimateBench data or the regridded version. In the experiment in the paper, we regridded to ClimateBench data to 5.625 degree. To do that, run
+```bash
+python src/data_preprocessing/regrid_climatebench.py /mnt/data/climatebench/train_val \
+    --save_path /mnt/data/climatebench/5.625deg/train_val --ddeg_out 5.625
+```
+and
+```bash
+python src/data_preprocessing/regrid_climatebench.py /mnt/data/climatebench/test \
+    --save_path /mnt/data/climatebench/5.625deg/test --ddeg_out 5.625
+```
+
+### Training
+
+To finetune ClimaX for climate projection, use
+```
+python src/climax/climate_projection/train.py --config <path/to/config>
+```
+For example, to finetune ClimaX on 8 GPUs use
+```bash
+python python src/climax/climate_projection/train.py --config configs/climate_projection.yaml \
+    --trainer.strategy=ddp --trainer.devices=8 \
+    --trainer.max_epochs=50 \
+    --data.root_dir=/mnt/data/climatebench/5.625deg \
+    --data.out_variables="tas" \
+    --data.batch_size=16 \
+    --model.pretrained_path='https://huggingface.co/tungnd/climax/resolve/main/5.625deg.ckpt' \
+    --model.out_vars="tas" \
+    --model.lr=5e-4 --model.beta_1="0.9" --model.beta_2="0.99" \
+    --model.weight_decay=1e-5
+```
+To train ClimaX from scratch, set `--model.pretrained_path=""`.
+
 ## Visualization
 
 Coming soon
