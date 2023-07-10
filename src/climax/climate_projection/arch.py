@@ -69,6 +69,7 @@ class ClimaXClimateBench(ClimaX):
         if freeze_encoder:
             for name, p in self.blocks.named_parameters():
                 name = name.lower()
+                # we do not freeze the norm layers, as suggested by https://arxiv.org/abs/2103.05247
                 if 'norm' in name:
                     continue
                 else:

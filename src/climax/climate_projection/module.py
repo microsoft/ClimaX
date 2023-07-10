@@ -1,4 +1,3 @@
-# credits: https://github.com/ashleve/lightning-hydra-template/blob/main/src/models/mnist_module.py
 from typing import Any, Dict
 
 import numpy as np
