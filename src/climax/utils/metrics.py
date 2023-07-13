@@ -252,10 +252,10 @@ def remove_nans(pred: torch.Tensor, gt: torch.Tensor):
     return pred, gt
 
 
-def pearson(pred, y, transform, vars, lat, log_steps, log_days, clim):
+def pearson(pred, y, transform, vars, lat, clim, log_postfix):
     """
-    y: [N, T, 3, H, W]
-    pred: [N, T, 3, H, W]
+    y: [B, V, H, W]
+    pred: [B, V, H, W]
     vars: list of variable names
     lat: H
     """
@@ -266,20 +266,19 @@ def pearson(pred, y, transform, vars, lat, log_steps, log_days, clim):
     loss_dict = {}
     with torch.no_grad():
         for i, var in enumerate(vars):
-            for day, step in zip(log_days, log_steps):
-                pred_, y_ = pred[:, step - 1, i].flatten(), y[:, step - 1, i].flatten()
-                pred_, y_ = remove_nans(pred_, y_)
-                loss_dict[f"pearsonr_{var}_day_{day}"] = stats.pearsonr(pred_.cpu().numpy(), y_.cpu().numpy())[0]
+            pred_, y_ = pred[:, i].flatten(), y[:, i].flatten()
+            pred_, y_ = remove_nans(pred_, y_)
+            loss_dict[f"pearsonr_{var}_{log_postfix}"] = stats.pearsonr(pred_.cpu().numpy(), y_.cpu().numpy())[0]
 
     loss_dict["pearsonr"] = np.mean([loss_dict[k] for k in loss_dict.keys()])
 
     return loss_dict
 
 
-def lat_weighted_mean_bias(pred, y, transform, vars, lat, log_steps, log_days, clim):
+def mean_bias(pred, y, transform, vars, lat, clim, log_postfix):
     """
-    y: [N, T, 3, H, W]
-    pred: [N, T, 3, H, W]
+    y: [B, V, H, W]
+    pred: [B, V, H, W]
     vars: list of variable names
     lat: H
     """
@@ -287,22 +286,12 @@ def lat_weighted_mean_bias(pred, y, transform, vars, lat, log_steps, log_days, c
     pred = transform(pred)
     y = transform(y)
 
-    # lattitude weights
-    w_lat = np.cos(np.deg2rad(lat))
-    w_lat = w_lat / w_lat.mean()  # (H, )
-    w_lat = torch.from_numpy(w_lat).unsqueeze(0).unsqueeze(-1).to(dtype=pred.dtype, device=pred.device)  # [1, H, 1]
-
     loss_dict = {}
     with torch.no_grad():
         for i, var in enumerate(vars):
-            for day, step in zip(log_days, log_steps):
-                pred_, y_ = pred[:, step - 1, i].flatten(), y[:, step - 1, i].flatten()
-                pred_, y_ = remove_nans(pred_, y_)
-                loss_dict[f"mean_bias_{var}_day_{day}"] = pred_.mean() - y_.mean()
-
-                # pred_mean = torch.mean(w_lat * pred[:, step - 1, i])
-                # y_mean = torch.mean(w_lat * y[:, step - 1, i])
-                # loss_dict[f"mean_bias_{var}_day_{day}"] = y_mean - pred_mean
+            pred_, y_ = pred[:, i].flatten(), y[:, i].flatten()
+            pred_, y_ = remove_nans(pred_, y_)
+            loss_dict[f"mean_bias_{var}_{log_postfix}"] = pred_.mean() - y_.mean()
 
     loss_dict["mean_bias"] = np.mean([loss_dict[k].cpu() for k in loss_dict.keys()])
 
