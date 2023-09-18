@@ -1,0 +1,8 @@
+datadir: /data/CMIP6/CMCC
+name: temperature
+cmip_name: ta
+era_name: t
+run: r1i1p1f1
+res:
+  - 1.40625
+  # - 5.625

@@ -1,0 +1,9 @@
+datadir: /data/CMIP6/HAMMOZ
+name: geopotential
+cmip_name: zg
+era_name: z
+run: r1i1p1f1
+version: v20190628
+res:
+  - 1.40625
+  # - 5.625

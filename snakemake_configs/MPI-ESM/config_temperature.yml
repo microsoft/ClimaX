@@ -1,0 +1,11 @@
+datadir: /data/CMIP6/MPI-ESM
+server_prefix: http://esgf-data1.llnl.gov/thredds/fileServer/css03_data/CMIP6/CMIP
+name: temperature
+cmip_name: ta
+era_name: t
+output_type: 6hrPlevPt
+run: r1i1p1f1
+version: v20190815
+res:
+  - 1.40625
+  # - 5.625

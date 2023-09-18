@@ -1,0 +1,9 @@
+datadir: /data/CMIP6/HAMMOZ
+name: 10m_u_component_of_wind
+cmip_name: uas
+era_name: u10
+run: r1i1p1f1
+version: v20190627
+res:
+  - 1.40625
+  # - 5.625
