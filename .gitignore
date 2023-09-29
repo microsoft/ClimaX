@@ -133,3 +133,6 @@ dmypy.json
 
 # experiments
 exps
+
+# snakemake logs
+.snakemake
