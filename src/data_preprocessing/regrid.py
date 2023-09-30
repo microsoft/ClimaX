@@ -47,16 +47,6 @@ def regrid(
         ds_in, grid_out, method, periodic=True, reuse_weights=reuse_weights
     )
 
-    # Hack to speed up regridding of large files
-    # ds_list = []
-    # chunk_size = 500
-    # if hasattr(ds_in, 'time'):
-    #     n_chunks = len(ds_in.time) // chunk_size + 1
-    #     for i in range(n_chunks+1):
-    #         ds_small = ds_in.isel(time=slice(i*chunk_size, (i+1)*chunk_size))
-    #         ds_list.append(regridder(ds_small, keep_attrs=True).astype('float32'))
-    #     ds_out = xr.concat(ds_list, dim='time')
-    # else:
     ds_out = regridder(ds_in, keep_attrs=True).astype('float32')
 
     # # Set attributes since they get lost during regridding
