@@ -1,0 +1,269 @@
+{% extends "main.html" %}
+
+<!-- Render hero under tabs -->
+{% block tabs %}
+{{ super() }}
+
+<!-- github button -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<style>
+    .md-footer-copyright {
+        display: none
+    }
+    .md-footer-nav__inner {
+        display: none
+    }
+
+    .md-content {
+        display: none
+    }
+
+    .tx-container {
+
+        height: fit-content;
+        padding-top: 0rem;
+        background: linear-gradient(var(--md-primary-fg-color), var(--md-primary-fg-color--dark) 80%, #fff 90%);
+    }
+
+    .tx-hero {
+        color: var(--md-primary-bg-color);
+        justify-content: center;
+        margin: 32px 2.5rem;
+    }
+
+    .tx-hero h1 {
+        margin-bottom: 0rem;
+        color: currentColor;
+        font-weight: 700
+    }
+    .tx-hero__content {
+        padding-bottom: 6rem;
+        margin: 0 auto;
+        /* justify-content: left;
+        padding-right: 3rem; */
+    }
+
+    .tx-hero__content h1 {
+        font-size: 2.5rem;
+    }
+
+    .tx-hero__content_small {
+        justify-content: left;
+        padding-right: 3rem;
+    }
+
+    .tx-hero__image {
+        max-width: 100%;
+        max-height: 100%;
+        order: 1;
+        padding-right: 1.5rem;
+        padding-bottom: 4rem;
+    }
+
+    .tx-hero .md-button {
+        margin-top: .5rem;
+        margin-right: .5rem;
+        color: var(--md-primary-bg-color)
+    }
+    .tx-container-2 {
+        padding: 0rem;
+        background-color: white;
+        margin-bottom: 0px;
+    }
+
+    .tx-hero__image-2 {
+        max-width: 100%;
+        max-height: 100%;
+        order: 1;
+        padding-right: 0.1rem;
+        padding-left: 0.25rem;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        float: left;
+    }
+
+    .tx-hero__content-2 {
+        margin-left: 50px;
+        justify-content: left;
+        /* color: #009485; */
+        font-weight: 300;
+        padding: 0 0px;
+        padding-bottom: 40px;
+        word-break: break-word;
+        float: right;
+    }
+    .tx-hero__content-2 h1 {
+        margin-top: 10px;
+        color: black;
+        /* color: #009485; */
+        font-weight: 600;
+        /* font-size: 36px; */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: normal;
+        /*font-family: inherit;*/
+    }
+    .tx-hero__content-2 p {
+        font-size: 17px;
+        line-height: 1.8em;
+        text-rendering: optimizeLegibility;
+        color: black;
+        display: block;
+    }
+
+    .tx-container-3 {
+        height: auto;
+
+    }
+
+    @media screen and (min-width: 60em) {
+        .md-sidebar--secondary {
+            display: none
+        }
+
+        .tx-hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tx-hero__content {
+            max-width: 28rem;
+            margin-top: 3.5rem;
+            margin-bottom: 3.5rem;
+            margin-left: 1.0rem;
+            margin-right: 4.0rem;
+            align-items: center;
+        }
+    }
+
+    @media screen and (min-width: 76.25em) {
+        .md-sidebar--primary {
+            display: none
+        }
+
+        .top-hr {
+            width: 100%;
+            display: flex;
+            max-width: 61rem;
+            margin-right: auto;
+            margin-left: auto;
+            padding: 0 .2rem;
+        }
+
+        .bottom-hr {
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            max-width: 61rem;
+            margin-right: auto;
+            margin-left: auto;
+            padding: 0 .2rem;
+        }
+    }
+
+</style>
+
+<section class="tx-container">
+    <div class="md-grid md-typeset">
+        <div class="tx-hero">
+            <div class="tx-hero__image">
+                <img
+                        src="assets/images/climax-logo.png"
+                        alt=""
+                        width="320"
+                        draggable="false"
+                >
+            </div>
+
+            <div class="tx-hero__content">
+                <h1 id="climax">ClimaX</h1>
+                <p>A foundation model for weather and climate.</p>
+                <br>
+                <a href="https://arxiv.org/abs/2301.10343" class="md-button md-button--primary">Paper</a>
+                <a
+                href="{{ page.next_page.url | url }}"
+                title="{{ page.next_page.title | e }}"
+                class="md-button md-button--primary"
+                >
+                Get started
+                </a><br>
+                <a href="https://github.com/microsoft/ClimaX" class="md-button">Contribute on GitHub
+                <img
+                    class = icon
+                    src="assets/images/icons/github-white.svg"
+                    alt=""
+                    width="24"
+                    draggable="false"
+                >
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="tx-container-2">
+    <div class ="md-grid md-typeset">
+        <div class="tx-hero__image-2">
+            <img
+                    src="assets/images/climax-coverfigure.png"
+                    alt=""
+                    width="600"
+                    draggable="false"
+            >
+        </div>
+        <div class="tx-hero">
+
+            <div class="tx-hero__content-2">
+                <h1 id="what-is-climax">What is ClimaX?</h1><br>
+                <p>
+                    ▶️
+                    <strong>
+                        ClimaX is the first foundation model for weather and climate science.
+                    </strong><br>
+                    ▶️
+                    <strong>
+                        Simple, flexible, and easy to use.
+                    </strong><br>
+                    ▶️
+                    <strong>
+                        Ample examples for the workflow to apply to various downstream tasks ranging from weather forecasting to climate downscaling.
+                    </strong><br>
+                    ▶️
+                    <strong>
+                        Supports efficient scalable distributed training, powered by <a href="https://www.pytorchlightning.ai/">PyTorch Lightning</a>.
+                    </strong><br>
+                </p>
+            </div>
+            <br>
+        </div>
+    </div>
+
+</section>
+
+<section class="tx-container-3">
+    <div class ="md-grid md-typeset">
+    <div class="tx-hero__content-2">
+        <h1 id="citation">Citation</h1>
+        <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nc">@article</span><span class="p">{</span><span class="nl">nguyen2023climax</span><span class="p">,</span>
+            <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="na">title</span><span class="p">=</span><span class="s">{ClimaX: A foundation model for weather and climate}</span><span class="p">,</span>
+            <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="na">author</span><span class="p">=</span><span class="s">{Nguyen, Tung and Brandstetter, Johannes and Kapoor, Ashish and Gupta, Jayesh K and Grover, Aditya}</span><span class="p">,</span>
+            <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="na">journal</span><span class="p">=</span><span class="s">{arXiv preprint arXiv:2301.10343}</span><span class="p">,</span>
+            <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="na">year</span><span class="p">=</span><span class="s">{2023}</span>
+            <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
+            </code></pre></div>
+
+            <p>Also consider starring <a href="https://github.com/microsoft/ClimaX">the github repo</a>.
+                <a class="github-button" href="https://github.com/microsoft/ClimaX" data-icon="octicon-star" data-show-count="true" aria-label="Star microsoft/ClimaX on GitHub">Star</a>         </p>
+    </div>
+    </div>
+
+</section>
+
+
+{% endblock %}
+<!-- Footer Section -->
+{% block footer %}{% endblock %}
