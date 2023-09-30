@@ -1,0 +1,49 @@
+
+year_strings = [f'{y}01010600-{y+1}01010000' for y in range(1850, 2015, 1)]
+
+print(config)
+
+rule download:
+    output:
+          "{dataset}/raw/{name}/{name}_{year_str}_raw.nc",
+    shell:
+         "wget https://esgf-data1.llnl.gov/thredds/fileServer/css03_data/CMIP6/CMIP/AWI/AWI-ESM-1-1-LR/historical/{config["
+         "run]}/6hrPlevPt/"
+         "{config[cmip_name]}/gn/v20200212/"
+         "{config[cmip_name]}_6hrPlevPt_AWI-ESM-1-1-LR_historical_{config[run]}_gn_{wildcards.year_str}.nc "
+         "-O {wildcards.dataset}/raw/{config[name]}/{config[name]}_{wildcards.year_str}_raw.nc"
+
+rule regrid:
+    input:
+          "{dataset}/raw/{name}/{name}_{year_str}_raw.nc"
+    output:
+          "{dataset}/{res}deg/{name}/{name}_{year_str}_{res}deg.nc.tmp"
+    shell:
+          "python ../../src/data_preprocessing/regrid.py \
+            --input_fns {input} \
+            --output_dir {wildcards.dataset}/{wildcards.res}deg/{wildcards.name} \
+            --ddeg_out {wildcards.res} \
+            --cmip 1 \
+            --rename {config[cmip_name]} {config[era_name]} \
+            --file_ending nc.tmp"
+
+rule delete:
+    input:
+          expand("{{dataset}}/{res}deg/{{name}}/{{name}}_{{year_str}}_{res}deg.nc.tmp",
+                 res=config['res']),
+    output:
+          expand("{{dataset}}/{res}deg/{{name}}/{{name}}_{{year_str}}_{res}deg.nc",
+                 res=config['res'])
+    priority: 100
+    run:
+          for i, o in zip(input, output):
+              shell("mv {i} {o}")
+      #     shell("rm {wildcards.dataset}/raw/{wildcards.name}/{wildcards.name}_{wildcards.year_str}_raw.nc"),
+
+
+rule all:
+    input:
+         expand("{datadir}/{res}deg/{name}/{name}_{year_str}_{res}deg.nc",
+                datadir=config['datadir'], res=config['res'], name=config['name'], year_str=year_strings)
+
+

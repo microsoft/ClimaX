@@ -1,0 +1,9 @@
+datadir: /data/CMIP6/TaiESM1
+server_prefix: https://esgf.ceda.ac.uk/thredds/fileServer/esg_cmip6/CMIP6/CMIP
+name: specific_humidity
+cmip_name: hus
+era_name: q
+run: r1i1p1f1
+res:
+  - 1.40625
+  # - 5.625

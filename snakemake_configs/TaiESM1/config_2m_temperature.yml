@@ -1,0 +1,9 @@
+datadir: /data/CMIP6/TaiESM1
+server_prefix: https://esgf.ceda.ac.uk/thredds/fileServer/esg_cmip6/CMIP6/CMIP
+name: 2m_temperature
+cmip_name: tas
+era_name: t2m
+run: r1i1p1f1
+res:
+  - 1.40625
+  # - 5.625

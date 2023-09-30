@@ -4,7 +4,21 @@
 
 ### Data Preparation
 
-The code for downloading and preprocessing CMIP6 data is coming soon
+First install `snakemake` following [these instructions](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
+
+To download and regrid a CMIP6 dataset to a common resolution (e.g., 1.406525 degree), go to the corresponding directory inside `snakemake_configs` and run
+```bash
+snakemake all --configfile config_2m_temperature.yml --cores 8
+```
+This script will download and regrid the `2m_temperature` data in parallel using 8 CPU cores. Modify `configfile` for other variables. After downloading and regrdding, run the following script to preprocess the `.nc` files into `.npz` format for pretraining ClimaX
+```bash
+python src/data_preprocessing/nc2np_equally_cmip6.py \
+    --dataset mpi
+    --path /data/CMIP6/MPI-ESM/1.40625deg/
+    --num_shards 10
+    --save_dir /data/CMIP6/MPI-ESM/1.40625deg_np_10shards
+```
+in which `num_shards` denotes the number of chunks to break each `.nc` file into.
 
 ### Training
 

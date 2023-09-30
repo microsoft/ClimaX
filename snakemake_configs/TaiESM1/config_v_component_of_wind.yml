@@ -1,0 +1,9 @@
+datadir: /data/CMIP6/TaiESM1
+server_prefix: https://esgf.ceda.ac.uk/thredds/fileServer/esg_cmip6/CMIP6/CMIP
+name: v_component_of_wind
+cmip_name: va
+era_name: v
+run: r1i1p1f1
+res:
+  - 1.40625
+  # - 5.625

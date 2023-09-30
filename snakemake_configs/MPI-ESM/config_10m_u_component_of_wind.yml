@@ -1,0 +1,11 @@
+datadir: /data/CMIP6/MPI-ESM
+server_prefix: https://esgf.ceda.ac.uk/thredds/fileServer/esg_cmip6/CMIP6/CMIP
+name: 10m_u_component_of_wind
+cmip_name: uas
+era_name: u10
+output_type: 6hrPlevPt
+run: r1i1p1f1
+version: v20190710
+res:
+  - 1.40625
+  # - 5.625
