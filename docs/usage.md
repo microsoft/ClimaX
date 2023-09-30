@@ -4,6 +4,8 @@
 
 ### Data Preparation
 
+First install `snakemake` following [these instructions](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
+
 To download and regrid a CMIP6 dataset to a common resolution (e.g., 1.406525 degree), go to the corresponding directory inside `snakemake_configs` and run
 ```bash
 snakemake all --configfile config_2m_temperature.yml --cores 8
