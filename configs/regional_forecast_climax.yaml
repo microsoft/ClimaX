@@ -2,22 +2,21 @@ seed_everything: 42
 
 # ---------------------------- TRAINER -------------------------------------------
 trainer:
-  default_root_dir: ${oc.env:OUTPUT_DIR,/home/t-tungnguyen/ClimaX/exps/regional_forecast_climax}
+  default_root_dir: ${oc.env:OUTPUT_DIR,"/Users/<your_username>/ClimaX/experiments/regional_forecast_climax"}
 
-  precision: 16
-
-  gpus: null
+  # MPS on Apple Silicon: keep full precision for stability
+  precision: 32-true
   num_nodes: 1
-  accelerator: gpu
-  strategy: ddp
+  accelerator: mps
+  devices: 1
+  strategy: auto
 
   min_epochs: 1
   max_epochs: 100
   enable_progress_bar: true
-
-  sync_batchnorm: True
-  enable_checkpointing: True
-  resume_from_checkpoint: null
+  sync_batchnorm: false
+  enable_checkpointing: true
+  # resume_from_checkpoint: null   # (deprecated; pass ckpt_path to fit/test instead)
 
   # debugging
   fast_dev_run: false
@@ -28,8 +27,8 @@ trainer:
       save_dir: ${trainer.default_root_dir}/logs
       name: null
       version: null
-      log_graph: False
-      default_hp_metric: True
+      log_graph: false
+      default_hp_metric: true
       prefix: ""
 
   callbacks:
@@ -40,26 +39,12 @@ trainer:
     - class_path: pytorch_lightning.callbacks.ModelCheckpoint
       init_args:
         dirpath: "${trainer.default_root_dir}/checkpoints"
-        monitor: "val/w_rmse" # name of the logged metric which determines when model is improving
-        mode: "min" # "max" means higher metric value is better, can be also "min"
-        save_top_k: 1 # save k best models (determined by above metric)
-        save_last: True # additionaly always save model from last epoch
-        verbose: False
+        monitor: "val/w_rmse"
+        mode: "min"
+        save_top_k: 1
+        save_last: true
         filename: "epoch_{epoch:03d}"
-        auto_insert_metric_name: False
-
-    - class_path: pytorch_lightning.callbacks.EarlyStopping
-      init_args:
-        monitor: "val/w_rmse" # name of the logged metric which determines when model is improving
-        mode: "min" # "max" means higher metric value is better, can be also "min"
-        patience: 5 # how many validation epochs of not improving until training stops
-        min_delta: 0. # minimum change in the monitored metric needed to qualify as an improvement
-
-    - class_path: pytorch_lightning.callbacks.RichModelSummary
-      init_args:
-        max_depth: -1
-
-    - class_path: pytorch_lightning.callbacks.RichProgressBar
+        auto_insert_metric_name: false
 
 # ---------------------------- MODEL -------------------------------------------
 model:
@@ -71,7 +56,7 @@ model:
   max_epochs: 100000
   warmup_start_lr: 1e-8
   eta_min: 1e-8
-  pretrained_path: ""
+  pretrained_path: ""  # override via CLI if needed
 
   net:
     class_path: climax.regional_forecast.arch.RegionalClimaX
@@ -138,7 +123,8 @@ model:
 
 # ---------------------------- DATA -------------------------------------------
 data:
-  root_dir: /datadrive/datasets/5.625deg_equally_np/
+  # Use your mac path (update if different)
+  root_dir: /mnt/data/5.625deg_npz
   variables: [
       "land_sea_mask",
       "orography",
@@ -194,6 +180,7 @@ data:
   predict_range: 72
   hrs_each_step: 1
   buffer_size: 10000
-  batch_size: 128
-  num_workers: 1
-  pin_memory: False
+  # Apple Silicon memory is tight; start small and scale up
+  batch_size: 1
+  num_workers: 0          # macOS: avoid multiprocessing hiccups
+  pin_memory: false
